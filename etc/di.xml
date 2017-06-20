@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Customer Wishlist Items Extension for Magento 2
+ *
+ * @author     Volodymyr Konstanchuk http://konstanchuk.com
+ * @copyright  Copyright (c) 2017 The authors
+ * @license    http://www.opensource.org/licenses/mit-license.html  MIT License
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <type name="Magento\Catalog\Ui\DataProvider\Product\ProductDataProvider">
+        <arguments>
+            <argument name="addFieldStrategies" xsi:type="array">
+                <item name="wishlist_product_count" xsi:type="object">Konstanchuk\CustomerWishlistItems\Ui\DataProvider\Product\AddWishlistCount</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- start customer wishlist items grid -->
+    <virtualType name="CustomerWishlistItemsGridFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+                <item name="fulltext" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CustomerWishlistItemsGridDataProvider"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+        <arguments>
+            <argument name="collection" xsi:type="object" shared="false">Magento\Wishlist\Model\ResourceModel\Wishlist\Collection</argument>
+            <argument name="filterPool" xsi:type="object" shared="false">CustomerWishlistItemsGridFilterPool</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="customer_wishlist_items_listing_data_source" xsi:type="string">Konstanchuk\CustomerWishlistItems\Model\ResourceModel\Wishlist\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- end customer wishlist items grid -->
+
+</config>
